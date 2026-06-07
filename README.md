@@ -116,7 +116,7 @@ fish-monitoring-esp32/
 ├── SETUP.md                 (hardware wiring guide)
 ├── sketch.ino    (main firmware)
 ├── parts-list.txt
-└── wiring-diagram.png
+└── wiring-diagram.txt
 ```
 
 ## Future Improvements
