@@ -1,0 +1,203 @@
+FISH TANK AUTOMATION SYSTEM - WIRING DIAGRAM
+=============================================
+
+OVERALL PIN CONNECTIONS
+========================
+
+ESP32 Pin  ──> Component
+─────────────────────────────────────
+
+GPIO 5     ──> DHT11 Data Pin
+3.3V       ──> DHT11 VCC
+GND        ──> DHT11 GND
+
+GPIO 4     ──> DS18B20 Data Pin (with 4.7kΩ pull-up to 3.3V)
+3.3V       ──> DS18B20 VCC
+GND        ──> DS18B20 GND
+
+GPIO 15    ──> HC-SR04 TRIG Pin
+GPIO 16    ──> HC-SR04 ECHO Pin (via 1kΩ+2kΩ voltage divider)
+5V         ──> HC-SR04 VCC
+GND        ──> HC-SR04 GND
+
+GPIO 6     ──> Relay Module IN1 (Pump Control)
+GPIO 7     ──> Relay Module IN2 (Light Control)
+5V         ──> Relay Module VCC
+GND        ──> Relay Module GND
+
+RGB LED    ──> Built-in on ESP32 (GPIO 48 — no wiring needed)
+
+
+DHT11 SENSOR (4-PIN HEADER)
+============================
+
+           ┌─────────────────┐
+VCC ───────┤ 1               │
+Data ──────┤ 2  DHT11        │
+NC  ───────┤ 3               │
+GND ───────┤ 4               │
+           └─────────────────┘
+
+Connect to ESP32:
+- Pin 1 (VCC)  → 3.3V
+- Pin 2 (Data) → GPIO 5
+- Pin 3 (NC)   → (not connected)
+- Pin 4 (GND)  → GND
+
+
+DS18B20 TEMPERATURE SENSOR (3-PIN)
+===================================
+
+         ┌──────────────────┐
+GND ─────┤ 1                │
+Data ────┤ 2  DS18B20       │
+VCC ─────┤ 3                │
+         └──────────────────┘
+
+Connect to ESP32:
+- Pin 1 (GND)  → GND
+- Pin 2 (Data) → GPIO 4 (with 4.7kΩ pull-up to 3.3V)
+- Pin 3 (VCC)  → 3.3V
+
+Pull-up resistor (optional but recommended):
+GPIO 4 ──┬── 4.7kΩ resistor ──> 3.3V
+         │
+    [DS18B20 Data pin]
+
+
+HC-SR04 ULTRASONIC SENSOR (4-PIN HEADER)
+=========================================
+
+           ┌─────────────────┐
+VCC ───────┤ 1               │
+TRIG ──────┤ 2  HC-SR04      │
+ECHO ──────┤ 3               │
+GND ───────┤ 4               │
+           └─────────────────┘
+
+Connect to ESP32:
+- Pin 1 (VCC)  → 5V (IMPORTANT: needs 5V!)
+- Pin 2 (TRIG) → GPIO 15
+- Pin 3 (ECHO) → Via voltage divider (see below)
+- Pin 4 (GND)  → GND
+
+VOLTAGE DIVIDER FOR ECHO PIN (REQUIRED):
+═════════════════════════════════════════
+
+The ECHO pin outputs 5V logic, which damages ESP32's 3.3V GPIO.
+Use this voltage divider to protect it:
+
+HC-SR04 ECHO Pin
+     │
+     ├── 1kΩ resistor ──┬── GPIO 16
+     │                  │
+     └── 2kΩ resistor ──┴── GND
+
+Connections:
+- HC-SR04 ECHO → One end of 1kΩ resistor
+- Other end of 1kΩ → GPIO 16 AND one end of 2kΩ
+- Other end of 2kΩ → GND
+
+Output voltage: 5V × (2kΩ / (1kΩ + 2kΩ)) = 3.33V ✓
+
+
+5V RELAY MODULE (2-CHANNEL)
+===========================
+
+           ┌─────────────────┐
+VCC ───────┤ 1               │
+GND ───────┤ 2               │
+IN1 ───────┤ 3  Relay Module │ (Pump)
+IN2 ───────┤ 4               │ (Light)
+           │                 │
+    Relay 1: COM ── NO ── NC  │
+    Relay 2: COM ── NO ── NC  │
+           └─────────────────┘
+
+Connect to ESP32:
+- Pin 1 (VCC) → 5V
+- Pin 2 (GND) → GND
+- Pin 3 (IN1) → GPIO 6 (Pump relay)
+- Pin 4 (IN2) → GPIO 7 (Light relay)
+
+Relay terminals (for actual pump/light):
+- Relay 1 NO (normally open) → Pump control circuit
+- Relay 2 NO (normally open) → Light control circuit
+
+
+POWER DISTRIBUTION
+===================
+
+      ┌─────────────┐
+      │    USB      │
+      │   Power     │
+      └──────┬──────┘
+             │
+         (5V rail)
+             │
+       ┌─────┴─────┐
+       │           │
+    [Relay]     [HC-SR04]
+       │
+     (GND)
+
+
+3.3V RAIL (from ESP32):
+       │
+   ┌───┴────┐
+   │        │
+ [DHT11] [DS18B20]
+   │        │
+ (GND)   (GND)
+
+
+QUICK REFERENCE TABLE
+====================
+
+Component    | Pin Name | ESP32 Pin | Voltage | Purpose
+─────────────┼──────────┼───────────┼─────────┼─────────────────
+DHT11        | Data     | GPIO 5    | 3.3V    | Temperature input
+DHT11        | VCC      | 3.3V      | 3.3V    | Power
+DHT11        | GND      | GND       | 0V      | Ground
+
+DS18B20      | Data     | GPIO 4    | 3.3V    | Temperature input
+DS18B20      | VCC      | 3.3V      | 3.3V    | Power
+DS18B20      | GND      | GND       | 0V      | Ground
+
+HC-SR04      | TRIG     | GPIO 15   | 3.3V    | Trigger pulse
+HC-SR04      | ECHO     | GPIO 16*  | 3.3V    | Distance reading*
+HC-SR04      | VCC      | 5V        | 5V      | Power
+HC-SR04      | GND      | GND       | 0V      | Ground
+
+Relay        | IN1      | GPIO 6    | 3.3V    | Pump control
+Relay        | IN2      | GPIO 7    | 3.3V    | Light control
+Relay        | VCC      | 5V        | 5V      | Power
+Relay        | GND      | GND       | 0V      | Ground
+
+* Via voltage divider (1kΩ + 2kΩ)
+
+
+TROUBLESHOOTING CHECKLIST
+==========================
+
+Wiring Check:
+[ ] DHT11 Data on GPIO 5
+[ ] DS18B20 Data on GPIO 4 (with pull-up)
+[ ] HC-SR04 TRIG on GPIO 15
+[ ] HC-SR04 ECHO on GPIO 16 (via voltage divider)
+[ ] Relay IN1 on GPIO 6
+[ ] Relay IN2 on GPIO 7
+[ ] All GND connections present
+[ ] 3.3V sensors on 3.3V rail
+[ ] 5V sensors on 5V rail
+[ ] Voltage divider installed (1kΩ + 2kΩ)
+
+Voltage Check:
+[ ] 3.3V rail reads ~3.3V
+[ ] 5V rail reads ~5V
+[ ] GND reads 0V
+
+Signal Check:
+[ ] No exposed wires touching (short risk)
+[ ] Pull-up resistors installed where needed
+[ ] Capacitor on relay power (optional)
