@@ -11,7 +11,9 @@ Complete step-by-step guide to building and installing the Fish Tank Automation 
 | DS18B20 Waterproof Temp Sensor | 1 | Comes in waterproof probe or module form |
 | HC-SR04 Ultrasonic Distance Sensor | 1 | Ping sensor for water level detection |
 | 5V Relay Module (2-channel) | 1 | For controlling pump and light |
-| Resistors | 2x 4.7kΩ | Pull-up resistors for DHT11 and DS18B20 (optional but recommended) |
+| Resistors (1kΩ) | 2 | Voltage divider for HC-SR04 ECHO pin + optional pull-up |
+| Resistors (2kΩ) | 1 | Voltage divider for HC-SR04 ECHO pin |
+| Resistors (4.7kΩ) | 2 | Pull-up resistors for DHT11 and DS18B20 (optional) |
 | Jumper Wires | ~30 | Male-to-male, male-to-female |
 | Breadboard or Perfboard | 1 | For prototyping or permanent build |
 | USB Cable (Micro-USB) | 1 | For ESP32 programming and power |
@@ -22,6 +24,37 @@ Complete step-by-step guide to building and installing the Fish Tank Automation 
 - Heat shrink tubing for wire protection
 - 3D-printed enclosure for ESP32 + sensor housing
 
+## Wiring Diagram
+
+```
+ESP32 Pin  ──> Component
+─────────────────────────────────────
+
+GPIO 5     ──> DHT11 Data Pin
+3.3V       ──> DHT11 VCC
+GND        ──> DHT11 GND
+
+GPIO 4     ──> DS18B20 Data Pin (with 4.7kΩ pull-up to 3.3V)
+3.3V       ──> DS18B20 VCC
+GND        ──> DS18B20 GND
+
+GPIO 15    ──> HC-SR04 TRIG Pin
+GPIO 16    ──> HC-SR04 ECHO Pin (via 1kΩ+2kΩ voltage divider)
+5V         ──> HC-SR04 VCC
+GND        ──> HC-SR04 GND
+
+Voltage Divider (for ECHO pin protection):
+GPIO 16    ──┬── 2kΩ resistor ──> GND
+             │
+             └── 1kΩ resistor ──> HC-SR04 ECHO
+
+GPIO 6     ──> Relay Module IN1 (Pump Control)
+GPIO 7     ──> Relay Module IN2 (Light Control)
+5V         ──> Relay Module VCC
+GND        ──> Relay Module GND
+
+RGB LED    ──> Built-in on ESP32 (GPIO 48 — no wiring needed)
+```
 
 ## Step-by-Step Assembly
 
@@ -64,14 +97,36 @@ VCC      ──>  3.3V
 
 HC-SR04 has 4 pins: VCC, TRIG, ECHO, GND
 
+**Important**: ECHO pin outputs 5V, but ESP32 GPIO only tolerates 3.3V max. Use a voltage divider.
+
 ```
 HC-SR04 Pin    ESP32 Pin
 ──────────────────────────
 VCC      ──>  5V (important: needs 5V, not 3.3V!)
 TRIG     ──>  GPIO 15
-ECHO     ──>  GPIO 16
+ECHO     ──>  (via voltage divider, see below)
 GND      ──>  GND
 ```
+
+**Voltage Divider for ECHO Pin (Required)**:
+
+The ECHO pin outputs 5V logic, which can damage ESP32's 3.3V GPIO. Build this divider:
+
+```
+HC-SR04 ECHO
+     │
+     ├── 1kΩ resistor ──┬── GPIO 16
+     │                  │
+     └── 2kΩ resistor ──┴── GND
+```
+
+**Connections**:
+- HC-SR04 ECHO → One end of 1kΩ resistor
+- Other end of 1kΩ resistor → GPIO 16 (and one end of 2kΩ)
+- Other end of 2kΩ resistor → GND
+
+This divides 5V down to ~3.3V safe for ESP32:
+- V_out = 5V × (2kΩ / (1kΩ + 2kΩ)) = 3.33V ✓
 
 ### 5. Wire the Relay Module
 
@@ -141,11 +196,11 @@ Partition Scheme: Default 4MB with SPIFFS
 
 ### 5. Update WiFi Credentials
 
-In `fish_tank_cleaned.ino`, find lines 11-13:
+In `sketch.ino`, find lines 11-13:
 
 ```cpp
-const char* ssid = "Adeen";              // ← Change to YOUR WiFi SSID
-const char* wifi_password = "03312226851"; // ← Change to YOUR WiFi password
+const char* ssid = "YOUR_SSID";              // ← Change to YOUR WiFi SSID
+const char* wifi_password = "YOUR_PASSWORD"; // ← Change to YOUR WiFi password
 const char* LOGIN_PASSWORD = "volt";     // ← Change this to a secure password!
 ```
 
@@ -167,7 +222,7 @@ const char* LOGIN_PASSWORD = "volt";     // ← Change this to a secure password
 
 ```
 --- Fish Tank System Initializing ---
-Connecting to WiFi: Adeen
+Connecting to WiFi: *****
 ........
 [+] WiFi Connected!
 IP Address: 192.168.X.XXX
