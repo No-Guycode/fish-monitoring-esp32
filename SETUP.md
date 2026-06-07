@@ -22,32 +22,6 @@ Complete step-by-step guide to building and installing the Fish Tank Automation 
 - Heat shrink tubing for wire protection
 - 3D-printed enclosure for ESP32 + sensor housing
 
-## Wiring Diagram
-
-```
-ESP32 Pin  ──> Component
-─────────────────────────────────────
-
-GPIO 5     ──> DHT11 Data Pin
-3.3V       ──> DHT11 VCC
-GND        ──> DHT11 GND
-
-GPIO 4     ──> DS18B20 Data Pin (with 4.7kΩ pull-up to 3.3V)
-3.3V       ──> DS18B20 VCC
-GND        ──> DS18B20 GND
-
-GPIO 15    ──> HC-SR04 TRIG Pin
-GPIO 16    ──> HC-SR04 ECHO Pin
-5V         ──> HC-SR04 VCC
-GND        ──> HC-SR04 GND
-
-GPIO 6     ──> Relay Module IN1 (Pump Control)
-GPIO 7     ──> Relay Module IN2 (Light Control)
-5V         ──> Relay Module VCC
-GND        ──> Relay Module GND
-
-RGB LED    ──> Built-in on ESP32 (GPIO 48 — no wiring needed)
-```
 
 ## Step-by-Step Assembly
 
