@@ -1,0 +1,39 @@
+FISH TANK AUTOMATION SYSTEM - PARTS LIST
+========================================
+
+MICROCONTROLLER
+[ ] ESP32 Dev Board (LOLIN32 or DevKitC) - qty: 1
+[ ] USB Micro-B Cable - qty: 1
+
+SENSORS
+[ ] DHT11 Temperature & Humidity Sensor - qty: 1
+[ ] DS18B20 Waterproof Temperature Sensor (probe) - qty: 1
+[ ] HC-SR04 Ultrasonic Distance Sensor - qty: 1
+
+RELAYS & CONTROL
+[ ] 5V Relay Module (2-Channel) - qty: 1
+
+RESISTORS
+[ ] 1kΩ Resistor (1/4W) - qty: 2 (HC-SR04 voltage divider)
+[ ] 2kΩ Resistor (1/4W) - qty: 1 (HC-SR04 voltage divider)
+[ ] 4.7kΩ Resistor (1/4W) - qty: 2 (optional, recommended)
+
+CONNECTING & BUILDING
+[ ] Jumper Wires (Male-to-Male) - qty: ~20
+[ ] Jumper Wires (Male-to-Female) - qty: ~10
+[ ] Breadboard (400-point or 830-point) - qty: 1
+[ ] Perfboard (optional, for permanent build) - qty: 1
+
+OPTIONAL
+[ ] Capacitor (100µF, 16V) - qty: 1
+[ ] Heat Shrink Tubing (3mm) - qty: 1 meter
+[ ] Enclosure Box - qty: 1
+[ ] Aquarium Sealant (silicone) - qty: 1 tube
+
+TOOLS
+- Soldering iron (25-40W)
+- Solder (lead-free)
+- Wire strippers
+- Multimeter
+
+ESTIMATED COST: $30-50 USD
