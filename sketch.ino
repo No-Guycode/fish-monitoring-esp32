@@ -8,11 +8,11 @@
 #include <math.h>
 #include <ESPmDNS.h>
 // WiFi credentials
-const char* ssid = "*****";
-const char* wifi_password = "******";
+const char* ssid = "YOUR_SSID";
+const char* wifi_password = "YOUR_PASSWORD";
 
 // ================= LOGIN =================
-const char* LOGIN_PASSWORD = "******";
+const char* LOGIN_PASSWORD = "volt";
 
 // Pin definitions
 #define DHT_PIN 5
