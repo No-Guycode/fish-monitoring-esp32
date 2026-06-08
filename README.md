@@ -140,7 +140,7 @@ Trigger pin of ultrasonic sensor works fine but is a little finnicky with the 3.
 ## Project Gallery
 
 **Hardware Setup**
-![Hardware Overview](images/hardware-setup.png)
+![Hardware Overview](images/62684.jpg)
 
 **Web Dashboard**
 ![Dashboard Screenshot](images/dashboard.png)
