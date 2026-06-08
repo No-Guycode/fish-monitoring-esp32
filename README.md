@@ -2,6 +2,9 @@
 
 An Arduino-based IoT system for automated monitoring and control of aquariums. Features real-time sensor data, web dashboard, scheduled automation, and persistent state management.
 
+**Web Dashboard Screenshot**
+![Dashboard Screenshot](images/dashboard.png)
+
 ## Features
 
 - **Real-time Monitoring**: Air temperature, humidity, water temperature, and water level
@@ -134,6 +137,13 @@ MIT
 ## Notes
 Trigger pin of ultrasonic sensor works fine but is a little finnicky with the 3.3V signals from the esp32. But it is mandatory to add a voltage divider on the Echo pin or the sensor will output 5V which would fry the microcontroller if a voltage divider isn't used.
 
+## Project Gallery
+
+**Hardware Setup**
+![Hardware Overview](images/hardware-setup.jpg)
+
+**Web Dashboard**
+![Dashboard Screenshot](images/dashboard.png)
 - All times are in Pakistan Standard Time (PKT = UTC+5)
 - Water level is measured as distance from sensor; lower = higher water
 - RGB LED: Rainbow = healthy, Orange = warning/error condition
